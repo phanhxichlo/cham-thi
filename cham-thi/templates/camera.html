@@ -1,0 +1,25 @@
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<video id="v" autoplay playsinline></video>
+<button onclick="cap()">📸 Chụp</button>
+
+<script>
+navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}})
+.then(s=>v.srcObject=s)
+
+function cap(){
+ let c=document.createElement("canvas")
+ c.width=v.videoWidth
+ c.height=v.videoHeight
+ c.getContext("2d").drawImage(v,0,0)
+ c.toBlob(b=>{
+  let f=new FormData()
+  f.append("image",b)
+  fetch("/scan",{method:"POST",body:f})
+  .then(r=>r.json())
+  .then(d=>location="/review?id="+d.id)
+ })
+}
+</script>

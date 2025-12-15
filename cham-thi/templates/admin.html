@@ -1,0 +1,29 @@
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<h3>Nhập đáp án theo mã đề</h3>
+<input id="code" placeholder="Mã đề"><br><br>
+<textarea id="json" rows="18" cols="40">
+{
+  "part1": { "1":"A","2":"B" },
+  "part2": {
+    "1": {"a":true,"b":false,"c":true,"d":false}
+  },
+  "part3": { "1":"5","2":"3" }
+}
+</textarea><br>
+<button onclick="save()">Lưu</button>
+
+<script>
+function save(){
+ fetch("/save-answer",{
+  method:"POST",
+  headers:{'Content-Type':'application/json'},
+  body:JSON.stringify({
+    code:document.getElementById("code").value,
+    answers:JSON.parse(document.getElementById("json").value)
+  })
+ }).then(()=>alert("Đã lưu"))
+}
+</script>

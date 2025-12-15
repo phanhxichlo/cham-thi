@@ -1,0 +1,19 @@
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<div id="r"></div>
+<script>
+fetch("/result/"+new URLSearchParams(location.search).get("id"))
+.then(r=>r.json())
+.then(d=>{
+ let h=`<h3>Điểm: ${d.score}/${d.max}</h3>`
+ for(let p of ["part1","part2","part3"]){
+  h+=`<h4>${p}</h4>`
+  for(let q in d[p]){
+    h+=`Câu ${q}: ${JSON.stringify(d[p][q])}<br>`
+  }
+ }
+ r.innerHTML=h
+})
+</script>

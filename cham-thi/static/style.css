@@ -1,0 +1,105 @@
+* {
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+}
+
+body {
+  margin: 0;
+  padding: 10px;
+  background: #f4f6f8;
+  color: #222;
+}
+
+h2, h3, h4 {
+  margin-top: 10px;
+}
+
+a {
+  display: block;
+  margin: 10px 0;
+  padding: 12px;
+  background: #1976d2;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 600;
+}
+
+a:active {
+  opacity: 0.8;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  font-size: 16px;
+  background: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 6px;
+}
+
+button:active {
+  opacity: 0.85;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+
+video {
+  width: 100%;
+  max-height: 70vh;
+  border-radius: 10px;
+  background: black;
+}
+
+.correct {
+  color: #2e7d32;
+  font-weight: bold;
+}
+
+.wrong {
+  color: #d32f2f;
+  font-weight: bold;
+}
+
+.blank {
+  color: #f57c00;
+  font-weight: bold;
+}
+
+.question {
+  background: white;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 6px;
+}
+
+.option {
+  display: inline-block;
+  min-width: 32px;
+  padding: 4px 8px;
+  margin-right: 6px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.option.correct {
+  background: #c8e6c9;
+}
+
+.option.wrong {
+  background: #ffcdd2;
+}
+
+.option.answer {
+  border: 2px solid #2e7d32;
+}
