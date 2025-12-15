@@ -1,40 +1,74 @@
 from flask import Flask, render_template, request, jsonify
-import cv2, numpy as np
-from omr import detect_part1, detect_part2, detect_part3, detect_exam_code
-from grading import grade_part1, grade_part2, grade_part3
-from answer_store import load_keys, save_keys
+import cv2
+import numpy as np
 from uuid import uuid4
 
-app = Flask(_name_)
+from omr import (
+    detect_part1,
+    detect_part2,
+    detect_part3,
+    detect_exam_code
+)
+from grading import (
+    grade_part1,
+    grade_part2,
+    grade_part3
+)
+from answer_store import load_keys, save_keys
+
+# =======================
+# Flask app
+# =======================
+app = Flask(__name__)
+
 TEMP = {}
 
-@app.route('/')
+# =======================
+# Routes
+# =======================
+
+@app.route("/")
 def index():
     return render_template("index.html")
 
-@app.route('/admin')
+
+@app.route("/admin")
 def admin():
     return render_template("admin.html")
 
-@app.route('/camera')
+
+@app.route("/camera")
 def camera():
     return render_template("camera.html")
 
-@app.route('/save-answer', methods=['POST'])
+
+@app.route("/save-answer", methods=["POST"])
 def save_answer():
     data = request.json
+
     keys = load_keys()
     keys[data["code"]] = data["answers"]
     save_keys(keys)
-    return {"status": "ok"}
 
-@app.route('/scan', methods=['POST'])
+    return jsonify({"status": "ok"})
+
+
+@app.route("/scan", methods=["POST"])
 def scan():
-    file = request.files['image']
-    img = cv2.imdecode(np.frombuffer(file.read(), np.uint8), 1)
+    file = request.files["image"]
 
+    # Read image
+    img = cv2.imdecode(
+        np.frombuffer(file.read(), np.uint8),
+        cv2.IMREAD_COLOR
+    )
+
+    # Detect exam code & answers
     code = detect_exam_code(img)
-    keys = load_keys()[code]
+    keys = load_keys().get(code)
+
+    if not keys:
+        return jsonify({"error": "Exam code not found"}), 400
 
     p1 = detect_part1(img)
     p2 = detect_part2(img)
@@ -57,8 +91,20 @@ def scan():
 
     rid = str(uuid4())
     TEMP[rid] = result
-    return {"id": rid}
 
-@app.route('/result/<rid>')
+    return jsonify({"id": rid})
+
+
+@app.route("/result/<rid>")
 def result(rid):
+    if rid not in TEMP:
+        return jsonify({"error": "Result not found"}), 404
+
     return jsonify(TEMP[rid])
+
+
+# =======================
+# Run locally
+# =======================
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
